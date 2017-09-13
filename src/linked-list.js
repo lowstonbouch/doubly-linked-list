@@ -21,7 +21,7 @@ class LinkedList {
             this._tail = node;
         }
         this.length++;
-        return node;
+        return this;
     }
 
     head() {
@@ -46,17 +46,23 @@ class LinkedList {
 
     insertAt(index, data) {
         var node = this._head;
-        for(var x = 0; x < index; x++)
-        {
-            node = node.next;
+        if(this.length > 0) {
+            for (var x = 0; x < index; x++) {
+                node = node.next;
+            }
+            var _node = new Node(data);
+            node.prev.next = _node;
+            _node.prev = node.prev;
+            node.prev = _node;
+            _node.next = node;
+            return this._node;
         }
-        var _node = new Node(data);
-        node.prev.next = _node;
-        _node.prev = node.prev;
-        node.prev = _node;
-        _node.next = node;
-
-        return _node;
+        else {
+            node = new Node(data);
+            this._head = node;
+            this._tail = node;
+            return this.node;
+        }
     }
 
     isEmpty() {
@@ -70,24 +76,80 @@ class LinkedList {
 
     clear() {
         var node = this._head;
-        while(this.length > 1)
-        {
-            node.next.prev = null;
-            node = node.next;
-            this.length--;
+        while(this.length > 1) {
+
+            if(node != null) {
+                this._head.next.prev = null;
+                this._head = this._head.next;
+                this.data = null;
+                this.length--;
+            }
         }
-        console.log(node);
-        this._head = null;
-        this._tail = null;
+        node = this._head;
+        node.data = null;
         this.length--;
+        return this;
     }
 
 
-    deleteAt(index) {}
+    deleteAt(index) {
+        var node = this._head;
+        if(node.next) {
+            for (var x = 0; x < index; x++) {
+                node = node.next;
+            }
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+            node = null;
+        }
+        else
+            node = null;
+        return this;
+    }
 
-    reverse() {}
+    reverse() {
+        var node = this._head;
+        var str;
+        var strall;
+        var cnt = this.length;
+        if(cnt > 1) {
+            for (var y = 0; y < cnt - 1; y++) {
+                node = this._head;
+                for (var x = 0; x < this.length - 1; x++) {
 
-    indexOf(data) {}
+                    str = node.data;
+                    node = node.next;
+                    strall = node.data;
+                    node.data = str;
+                    node = node.prev;
+                    node.data = strall;
+                    node = node.next;
+                }
+                this.length--;
+            }
+        }
+        else {
+        }
+       return this;
+    }
+
+    indexOf(data) {
+        var node = this._head;
+        var cnt = 0;
+        while(node.data != data)
+        {
+            if(node.next != null) {
+                node = node.next;
+                cnt++;
+            }
+            else
+                break;
+        }
+        if(node.data != data) {
+            return -1;
+        }
+        return cnt;
+    }
 }
 
 module.exports = LinkedList;
